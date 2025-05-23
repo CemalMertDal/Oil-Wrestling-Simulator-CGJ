@@ -25,11 +25,15 @@ public class CharacterMovement : MonoBehaviour
     private float xRotation = 0f;
     private float yRotation = 0f;
 
+    [Header("Interaction")]
+    public Transform handTransform;  // Karakterin eli - Inspector'da atanmalı
+
     public AudioSource walkSound;
 
     [Header("Others")]
     private bool closed = true;
     private Rigidbody rb;
+    private PlayerInteraction playerInteraction;
     
     
     
@@ -42,6 +46,23 @@ public class CharacterMovement : MonoBehaviour
         Vector3 initialCamRotation = playerCamera.localEulerAngles;
         xRotation = initialCamRotation.x;
         yRotation = transform.eulerAngles.y;
+        
+        // PlayerInteraction bileşenini al veya ekle
+        playerInteraction = GetComponent<PlayerInteraction>();
+        if (playerInteraction == null)
+        {
+            playerInteraction = gameObject.AddComponent<PlayerInteraction>();
+        }
+        
+        // El pozisyonunu ayarla
+        if (handTransform != null)
+        {
+            playerInteraction.handTransform = handTransform;
+        }
+        else
+        {
+            Debug.LogWarning("Hand transform is not assigned! Dumbbell lifting won't work correctly.");
+        }
 
         Invoke(nameof(enableLook), 0.5f);
     }
